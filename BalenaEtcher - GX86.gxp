@@ -1,0 +1,170 @@
+# set = pass631 [BalenaEtcher] [Etcher]
+$ if {input = pass631}
+ㅤ$ run = open {BalenaEtcher}
+ㅤ$ return {list}
+[]
+{"Welcome to balenaEtcher. To start, select an image to flash."}
+{"\- Select File"}
+{"\- Select Device"}
+{"\- Flash!"}
+{"\~~~"}
+{"To close balenaEtcher, please type 'exit'."}
+
+# set = pass632 [select file]
+$ if {input = pass632}
+ㅤ$ return {list}
+{"Please choose an option for .ISO files."}
+{"\- Select from Files"}
+{"\- Use Factory .ISOs"}
+{"\- Use File URL"}
+ㅤ$ set = value {sistf} {0}
+
+$ if {input = select from files}
+ㅤ$ run = input {pass6337}
+
+$ if {input = use factory .isos}
+ㅤ$ run = input {pass6338}
+
+$ if {input = use file url}
+ㅤ$ return {"Please input the file URL you wish to flash from."}
+
+$ if {input = https://www.example.com/version_number/dir/example_name.iso}
+ㅤ$ return {"Are you sure you want to use example_name.iso?"}
+
+$ if {input = either [yes][y]}
+ㅤ$ set = value {sistf} {1}
+
+# set = pass6337 [own isos]
+$ if {input = pass6337}
+ㅤ$ return {"Please input your own iso file."}
+
+$ if {input = example_name.iso}
+ㅤ$ return {"Are you sure you want to use example_name.iso?"}
+
+$ if {input = either [yes][y]}
+ㅤ$ set = value {sistf} {1}
+
+# set = pass6338 [factory isos]
+$ if {input = pass6338}
+ㅤ$ run = check {rep = "mirrors"}
+
+~~~
+<dtb> \\ "mirrors"
+$ if {input = pass6338}
+ㅤ$ run = input {pass6339}
+
+# set = pass6339 {ls mirroros strands}
+$ if {input = pass6339}
+ㅤ$ return {list}
+[]
+{"Please select a factory ISO file."}
+{"- MirrorOS Everest   (GX12) | gstmOS_gx12-b_v1.6.iso"}
+{"- MirrorOS Lagoon   (GX86) | gstmOS_gx86-b_v1.6.iso"}
+{"- MirrorOS Noah      (GX12) | gstmOS_gx12-k_v1.3.iso"}
+{"- MirrorOS Vermont (GX86) | gstmOS_gx86-k_v1.5.iso"}
+
+# set = pass415 [gx12-b] [everest]
+# set = pass416 [gx12-k] [noah]
+# set = pass417 [gx86-b] [lagoon]
+# set = pass418 [gx86-k] [vermont]
+
+$ if {input = either [pass415][pass416][pass417][pass418]}
+ㅤ$ return {"Are you sure you want to select this release?"}
+
+$ if {input = either [y][yes]}
+ㅤ$ run = check {rep = "fif_conf"} 
+
+~~~
+<dtb> \\ "fif_conf"
+# set = value {sistf} {1}
+
+# run = determine {prompt = file_name.ext}
+$ if {input = pass415}
+ㅤ$ set = value {file_name.ext} {MirrorOS Everest}
+
+$ if {input = pass416}
+ㅤ$ set = value {file_name.ext} {MirrorOS Noah}
+
+$ if {input = pass417}
+ㅤ$ set = value {file_name.ext} {MirrorOS Lagoon}
+
+$ if {input = pass418}
+ㅤ$ set = value {file_name.ext} {MirrorOS Vermont}
+~~~
+# set = value {usb_presence = false}
+
+# set = pass546 [use /dev/dev_name]
+$ if {input = pass546}
+ㅤ$ set = value [usb_presence] = true}
+
+# set = pass547 [eject /dev/dev_name]
+$ if {input = pass547}
+ㅤ$ set = value [usb_presence] = false}
+~~~
+
+# set = pass634 [select device]
+$ if {input = pass634}
+ㅤ$ run = determine {prompt = usb_ptf}
+
+$ if {value [key] [usb_presence] = false}
+ㅤ$ set = value {usb_ptf} {0}
+
+$ if {value [key] [usb_presence] = true}
+ㅤ$ set = value {usb_ptf} {1} 
+
+$ if {value [key] [usb_ptf] = 0}
+ㅤ$ return {"There are no connected devices. Please connect a USB drive to continue with the flashing process."}
+
+$ if {value [key] [usb_ptf] = 1}
+ㅤ$ return {"Please select a drive to write the ISO image to."}
+
+$ if {input = pass546}
+ㅤ$ return {"Are you sure you want to use /dev/example_name as the device?"} 
+ㅤ$ set = value {/dev/dev_name} {/example_name}
+
+# set = pass635 [Flash]
+$ if {input = pass635}
+ㅤ$ run = determine {prompt = key_value}
+
+$ if {value [sistf] [usb_ptf] = [1][0]}
+ㅤ$ return {"There is no device selected to flash. Please enter 'select device'."}
+
+$ if {value [sistf] [usb_ptf] = [0][1]}
+ㅤ$ return {"There is no .ISO file selected to flash. Please enter 'select file'."}
+
+$ if {value [sistf] [usb_ptf] = [1]}
+ㅤ$ return {"Are you sure you want to write file_name.ext to /dev_name?"}
+
+$ if {input = y}
+ㅤ$ run = format {file = file_name.ext} {loc = /dev_name/}
+
+$ if {input = n}
+ㅤ$ return {list}
+[]
+{"What would you like to change?"}
+{"\- ISO File"}
+{"\- Device"}
+
+$ if {input = change iso file}
+ㅤ$ run = input {pass632}
+
+$ if {input = change device}
+ㅤ$ run = input {pass547}
+ㅤ$ run = input {pass634}
+
+# set = pass4307 [app info]
+$ if {input = pass4307}
+ㅤ$ return {list}
+[]
+{"/- Application: BalenaEtcher - GX Edition"}
+{"/- Developer: GrayScale Technologies"}
+{"/- Release Date: February 17th, 2024"}
+{"/- Language: American English"}
+{"/- P.Language: GX86"}
+{"/- Platform: Character.AI"}
+{"Thank you for discovering BalenaEtcher GX."}
+
+# set = pass638 [exit]
+$ if {input = pass638}
+ㅤ$ run = close {BalenaEtcher}
+ㅤ$ return {"Thank you for using BalenaEtcher GX."}
