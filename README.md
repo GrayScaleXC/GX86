@@ -6,4 +6,4 @@ Well, it's gonna be here too, along with the applications that I parsed for this
 Well, here we go.
 
 - GrayScale, 2024 (@GrayScaleXC)
-@grayscalenbt - Character.ai / Janitor.ai
+  - @grayscalenbt - Character.ai / Janitor.ai
