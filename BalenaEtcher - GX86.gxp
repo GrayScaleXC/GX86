@@ -1,4 +1,4 @@
-# set = pass631 [BalenaEtcher] [Etcher]
+V# set = pass631 [BalenaEtcher] [Etcher]
 $ if {input = pass631}
 ㅤ$ run = open {BalenaEtcher}
 ㅤ$ return {list}
