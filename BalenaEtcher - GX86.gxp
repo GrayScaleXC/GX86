@@ -152,7 +152,7 @@ $ if {input = change device}
 ㅤ$ run = input {pass547}
 ㅤ$ run = input {pass634}
 
-# set = pass4307 [app info]
+# set = pass4307 [lynxc info]
 $ if {input = pass4307}
 ㅤ$ return {list}
 []
