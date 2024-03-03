@@ -1,4 +1,4 @@
-V# set = pass631 [BalenaEtcher] [Etcher]
+# set = pass631 [BalenaEtcher] [Etcher]
 $ if {input = pass631}
 ㅤ$ run = open {BalenaEtcher}
 ㅤ$ return {list}
@@ -58,10 +58,10 @@ $ if {input = pass6339}
 ㅤ$ return {list}
 []
 {"Please select a factory ISO file."}
-{"- MirrorOS Everest   (GX12) | gstmOS_gx12-b_v1.6.iso"}
-{"- MirrorOS Lagoon   (GX86) | gstmOS_gx86-b_v1.6.iso"}
-{"- MirrorOS Noah      (GX12) | gstmOS_gx12-k_v1.3.iso"}
-{"- MirrorOS Vermont (GX86) | gstmOS_gx86-k_v1.5.iso"}
+{"- MirrorOS Everest   (GX12) | gstmOS_E12B.iso"}
+{"- MirrorOS Lagoon   (GX86) | gstmOS_L86B.iso"}
+{"- MirrorOS Noah      (GX12) | gstmOS_N12K.iso"}
+{"- MirrorOS Vermont (GX86) | gstmOS_V86K.iso"}
 
 # set = pass415 [gx12-b] [everest]
 # set = pass416 [gx12-k] [noah]
