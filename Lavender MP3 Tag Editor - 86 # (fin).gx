@@ -1,0 +1,813 @@
+# run {mkdir /usr/tmp/id3/}
+# set = value {lav_fs-ptf}{0}
+# set = value {lav_pgms}{0}
+# set = value {usb_ptf}{0}
+# set = value {usb_mcapac}{10}
+# set = value {lav_use}{0}
+
+# set = pass22 [lavender]
+$ if {input = pass22}
+ㅤ$ print {list}
+[]
+{"Welcome to IavenD3r, MirrorOS's ID3 Tag Editor."}
+{"To get started, select an audio file to edit."}
+{"ㅤ"}
+{"* Select File"}
+{"* Write Custom ID3"}
+{"* Load .txt File"}
+{"__________________"}
+
+$ if {input = select file}
+ㅤ$ run = input {pass23}
+
+$ if {input = pass23}
+ㅤ$ return {list}
+[]
+{"Which directory would you like to select from?"}
+{"* SDA (/downloads)"}
+{"* SDB (/media)"}  
+
+~~~
+
+// "lavender_sda"
+
+$ if {input = or [sda][downloads]}
+ㅤ$ run = check {/usr/downloads/}
+ㅤ$ run = check {.ext = or [.mp3][.wav][.m4a][.flac][.aac]}
+ㅤ$ return {"Please enter the audio file you wish to write ID3 tags for."}
+
+$ if {input = file_name.ext}
+ㅤ$ return {"Are you sure you want to write ID3 file for 'file_name.ext'?"}
+
+$ if {input = [y][yes]}
+ㅤ$ set = value {lav_fs-ptf}{1}
+ㅤ$ return {list}
+[]
+{"File 'file_name.ext' has been selected."}
+{"ㅤ"}ㅤ
+{"* Write Custom ID3"}
+{"__________________"}
+
+$ if {.ext == or [.wma][.wmv]}
+ㅤ$ run = input {pass30}
+
+~~~
+
+// "lavender_sda" // "wind_conver"
+
+$ if {input = pass30}
+ㅤ$ return {"Convert Windows Media file to 'file_name.mp3'?"}
+$ if {input = [y][yes]}
+ㅤ$ run {mv file_name.wma >> file_name.mp3} 
+ㅤ$ run = input {file_name.mp3}
+
+$ if {input = [n][no]}
+ㅤ$ run = input {pass22}
+
+~~~
+
+// "lavender_sdb"
+
+$ if {input = or [sdb][media]
+ㅤ$ run = determine {usb_ptf}
+
+$ if {value [usb_ptf] = 0}
+ㅤ$ return {"There are no USB devices connected for file selection."}
+
+$ if {value [usb_ptf] = 1}
+ㅤ$ run = check {/root/media/}
+ㅤ$ return {list}
+[]
+{"Which USB device would you like to select from?"}
+{"ㅤ"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"ㅤ"}
+{* usb_fsd }
+
+~~~
+
+// "lavender_sdb" // "fsd_hand"
+
+$ if {input = [>][next][next page]"}
+ㅤ$ run = add {sdb_fsd}{+1}
+ㅤ$ return {list}
+[]
+{"Which USB device would you like to select from?"}
+{"ㅤ"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"ㅤ"}
+{* <usb_fsd> }
+
+$ if {input = [<][previous][previous page]}
+ㅤ$ run = sub {sdb_fsd}{-1}
+
+$ if {value [usb_mcapac] = *10}
+ㅤ$ run = div {usb_mcapac/10}
+
+$ if {quotient [usb_mcapac/10]}
+ㅤ$ set = max {sdb_fsd}{quotient}
+
+$ if {quotient [usb_mcapac/10] = 1}
+ㅤ$ set = value {usb_mcapac}{1}
+ㅤ$ return {list}
+[]
+{"Which USB device would you like to select from?"}
+{"ㅤ"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"ㅤ"}
+{* usb_fsd }
+
+
+$ if {quotient [usb_mcapac/10] = 10}
+ㅤ$ set = value {usb_fsd}{10}
+ㅤ$ return {list}
+[]
+{"Which USB device would you like to select from?"}
+{"ㅤ"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"* /dev_name"}
+{"ㅤ"}
+{* <usb_fsd }
+
+~~~
+
+// "lavender_sdb" // "sdb_in"
+
+$ if {input = /dev_name}
+ㅤ$ run = check {/root/media/dev_name/dir/dir/}
+ㅤ$ run = check {.ext = or [.mp3][.wav][.flac][.m4a][.aac]}
+ㅤ$ return {"Please enter the audio file you wish to write ID3 tags for."}
+
+$ if {input = file_name.ext}
+ㅤ$ return {"Are you sure you want to write ID3 file for 'file_name.ext'?"}
+
+$ if {input = [y][yes]}
+ㅤ$ set = value {lav_fs-ptf}{1}
+ㅤ$ return {list}
+[]
+{"File 'file_name.ext' has been selected."}
+{"ㅤ"}ㅤ
+{"* Write Custom ID3"}
+{"__________________"}
+
+$ if {.ext = or [.wma][.wmv]}
+ㅤ$ run = input {pass31}
+
+~~~
+
+// "lavender_sdb" // "wind_conver"
+
+$ if {input = pass31}
+ㅤ$ return {"Convert Windows Media file to 'file_name.mp3'?"}
+
+$ if {input = [y][yes]}
+ㅤ$ run {mv file_name.wma >> file_name.mp3} 
+ㅤ$ run = input {file_name.mp3}
+
+$ if {input = [n][no]}
+ㅤ$ run = input {sdb}
+
+~~~
+
+// "lavendar_tag-cycle"
+
+$ if {input = Write Custom ID3}
+ㅤ$ run = determine {lav_fs-ptf}
+
+$ if {value [lav_fs-ptf] = 0}
+ㅤ$ return {list}
+[]
+{"No file has been selected."}
+{"ㅤ"}
+{"* Select File"}
+{"_____________"}
+
+$ if {value [lav_fs-ptf] = 1}
+ㅤ$ return {list}
+[]
+{"Please write your ID3 tag info."}
+{"ㅤ"}
+{"Name (SN):          ___"}
+{"Artist (ART):       ___"}
+{"Album (ALB):        ___"}
+{"Track Number (TRN): ___"}
+{"Genre (GNR):     ㅤㅤ___"}
+{"Release Year (RLY): ___"}
+
+~~~
+
+// "lavender_tag-cycle" // "tag_sum"
+
+$ if {input = or [song name:][name:][SN:] example_name}
+ㅤ$ set = value {tag_sn}{1}
+
+$ if {input = or [song artist:][artist:][ART:] example_name}
+ㅤ$ set = value {tag_ar}{1}
+
+$ if {input = or [artist album:][album:][song album:][ALB:] example_name}
+ㅤ$ set = value {tag_al}{1}
+
+$ if {input = track number: example_number}
+ㅤ$ set = value {tag_tn}{1}
+
+$ if {input = or [song genre:][track genre:][genre:][GNR:] example_genre}
+ㅤ$ set = value {tag_gn}{1}
+
+$ if {input = or [year:][release date:][release year:] example_number}
+ㅤ$ set = value {tag_rl}{1}
+
+~~~
+
+// "lavender_tag-cycle" // "tag_conf"
+
+$ strand.& {#if[value[
+@ tag_sn == 1
+@ tag_ar == 1
+@ tag_al == 1
+@ tag_tn == 1
+@ tag_gn == 1
+@ tag_rl == 1
+]}
+ㅤ$ return {list}
+[]
+{"Are you sure you want to write ID3 tags to 'file_name.ext'?"}
+{"ㅤ"}
+{"* Yes"}
+{"* No"}
+
+$ if {else}
+ㅤ$ return {list}
+[]
+{"Full ID3 credentials are not entered."}
+{"ㅤ"}
+{"* Edit ID3 tags"}
+
+$ if {input = edit id3 tags}
+ㅤ$ run = input {write custom id3}
+
+~~~
+
+$ if {input = [y][yes]}
+ㅤ$ run {touch file_name.id3 /usr/tmp/id3/} 
+
+$ if {input = [y][yes]}
+ㅤ$ strand.& {#run[write[file_name.id3[
+ㅤ@ id3_sn == example_name
+ㅤ@ id3_art == example_name
+ㅤ@ id3_alb == example_name
+ㅤ@ id3_trn == example_number
+ㅤ@ id3_gnr == example_genre
+ㅤ@ id3_rly == example_number
+]}
+
+$ if {input = [y][yes]}
+ㅤ$ run = add {lav_use}{+1}
+ㅤ$ return {list}
+[]
+{"ID3 tags have been written for 'file_name.ext'."}
+{"View tags?"}
+{"ㅤ"}
+{"* Yes"}
+{"* No"}
+{"_____"}
+
+$ if {input = [y][yes]}
+ㅤ$ run {cat file_name.id3}
+
+~~~
+
+$ if {input = cat file_name.id3}
+ㅤ$ return {list}
+[]
+{"File Name: file_name.ext"}
+{"ㅤ"}
+{"Song:         | example_name"}
+{"Artist:       | example_name"}
+{"Album:        | example_name"}
+{"Track Number: | example_number"}
+{"Genre:        | example_genre"}
+{"Release Year: | example_number"}
+{"ㅤ"}
+{"*ID3 Tags powered by IavenD3r.*"}
+
+~~~
+
+// "mp3_id3-data"
+
+# set = pass36 [read id3 data][read tag data][id3 data][tag data]
+$ if {input = pass36}
+ㅤ$ return {"Please enter the name of your tagged song (or its audio file) to read the tag data."}
+
+$ if {input = or [example_name][file_name.ext]}
+ㅤ$ run = check {/usr/tmp/id3/}
+
+$ if {presence [file_name.id3] = false}
+ㅤ$ return {"Audio file does not have a tag file or .ID3 file is missing."}
+
+$ if {presence [file_name.id3] = true}
+ㅤ$ run = {cat file_name.id3}
+
+~~~
+
+// "mp3_id3-data" // "id3_mem-list"
+
+# set = pass34 [list tag files][list tagged mp3s][list tagged files][list .ID3s][ls /usr/tmp/id3/]
+$ if {input = pass34}
+ㅤ$ set = value {id3_page}{1}
+ㅤ$ return {list}
+[]
+{"ID3 Tag Files | /usr/tmp/id3/"}
+{"ㅤ"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"ㅤ"}
+{* id3_page> }
+
+$ if {input = [>][next][next page]"}
+ㅤ$ run = add {id3_page}{+1}
+ㅤ$ return {list}
+[]
+{"ID3 Tag Files | /usr/tmp/id3/"}
+{"ㅤ"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"ㅤ"}
+{* <id3_page> } 
+
+$ if {input = [<][previous][previous page]}
+ㅤ$ run = sub {id3_page}{-1}
+
+$ if {value [id3_page] = 10}
+ㅤ$ return {list}
+[]
+{"ID3 Tag Files | /usr/tmp/id3/"}
+{"ㅤ"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"file_name.id3"}
+{"ㅤ"}
+{* <id3_page }
+
+# set = min {id3_page}{1}
+# set = max {id3_page}{10}
+
+$ strand.& {#if[value[
+@ id3_page == 1
+@ input == [<][previous][previous page]
+]}
+ㅤ$ run = input {pass34}
+
+$ strand.& {#if[value[
+@ id3_page == 10
+@ input == [>][next][next page]
+]}
+ㅤ$ set = value {id3_page}{1}
+ㅤ$ run = input {pass34}
+
+~~~
+
+// "mp3_id3-data" // "id3_manage"
+
+# set = pass35 [edit id3][edit tag][edit id3 for file_name.ext][edit tag for file_name.ext]
+$ if {input = pass35}
+ㅤ$ return {"Please enter the name of the tag file you wish to edit."}
+
+$ if {input = example_name.ext}
+ㅤ$ return {list}
+[]
+{"Current Tags | file_name.id3"}
+{"ㅤ"}
+{"Song:        |   example_name"}
+{"Artist:      |   example_name"}
+{"Album:       |   example_name"}
+{"Track Number:    example_number"}
+{"Genre:       |   example_genre"}
+{"Release Year:    example_number"}
+{"ㅤ"}
+{"~~~~~"}
+{"Are you sure you wish to edit tags?"}
+
+$ if {input = [n][no]}
+ㅤ$ run = input {pass22}
+
+$ if {input = [y][yes]} 
+ㅤ$ return {list}
+[]
+{"You can now edit your ID3 tag info for 'file_name.ext'."}
+{"ㅤ"}
+{"Name (SN):          ___"}
+{"Artist (ART):       ___"}
+{"Album (ALB):        ___"}
+{"Track Number (TRN): ___"}
+{"Genre (GNR):     ㅤㅤ___"}
+{"Release Year (RLY): ___"}
+
+~~~
+
+// "mp3_id3-data" // "id3_melt"
+
+$ if {input = melt file_name.id3}
+ㅤ$ return {"Are you sure you want to delete 'file_name.id3'?"}
+
+$ if {input = [y][yes]}
+ㅤ$ run {mv file_name.id3 >> goto /d /usr/.trash/}
+ㅤ$ run {rm file_name.id3}
+ㅤ$ run = sub {lav_use}{-1}
+ㅤ$ return {"ID3 'file_name.id3' has been moved to /.trash."}
+
+~~~
+
+// "mp3_id3-data" // "id3_find"
+
+# set = pass26 [search tags][search id3][search]
+$ if {input = pass26}
+ㅤ$ return {list}
+[]
+{"Search by: ___"}
+{"* Name"}
+{"* Artist"}
+{"* Album"}
+{"* Release Date"}
+{"* Genre"}
+{"ㅤ"}
+{"< Back to front page"}
+
+$ if {input = back to front page"}
+ㅤ$ run = input {pass22}
+
+$ if {input = name}
+ㅤ$ set = value {search_filter}{name}
+ㅤ$ return {"Please enter the name of the song you are searching tags for."}
+
+$ if {input = artist}
+ㅤ$ set = value {search_filter}{artist} 
+ㅤ$ return {"Please enter the name of the artist you are searching tags for."}
+
+$ if {input = album}
+ㅤ$ set = value {search_filter}{album}
+ㅤ$ return {"Please enter the name of the album you are searchhing tags for."}
+
+$ if {input = release date}
+ㅤ$ set = value {search_filter}{release_date}
+ㅤ$ return {"Please enter the year of release date you are searching tags for."}
+
+$ if {input = genre}
+ㅤ$ set = value {search_filter}{genre}
+ㅤ$ return {"Please enter the name of genre you are searching tags for."}
+
+$ if {input = example_name}
+ㅤ$ run = check {/usr/tmp/id3/file_name.id3}
+ㅤ$ return {list}
+[]
+{"Files with search filter 'search_filter' and prompt 'example_name':"}
+{"ㅤ"}
+{"* file_name.id3"}
+{"* file_name.id3"}
+{"* file_name.id3"}
+{"* file_name.id3"}
+{"* file_name.id3"}
+
+$ if {input = example_number}
+ㅤ$ run = check {/usr/tmp/id3/file_name.id3}
+ㅤ$ return {list}
+[]
+{"Files with search filter 'search_filter' and prompt 'example_number':"}
+{"ㅤ"}
+{"* file_name.id3"}
+{"* file_name.id3"}
+{"* file_name.id3"}
+{"* file_name.id3"}
+{"* file_name.id3"}
+
+$ if {input = example_genre}
+ㅤ$ run = check {/usr/tmp/id3/file_name.id3}
+ㅤ$ return {list}
+[]
+{"Files with search filter 'search_filter' and prompt 'example_genre':"}
+{"ㅤ"}
+{"* file_name.id3"}
+{"* file_name.id3"}
+{"* file_name.id3"}
+{"* file_name.id3"}
+{"* file_name.id3"}
+
+~~~
+
+// "lavender_txt"
+
+# set = pass38 [load .txt][load .txt file][use .txt file][use .txt][load text file]
+$ if {input = pass38}
+ㅤ$ return {list}
+[]
+{"You may now dump the specific .txt file for your tag creation."}
+{"ㅤ"}
+{"PRE-LOAD | FORMAT"}
+{"ㅤ"}
+{"* sf (file selection directory): SDA/SDB"}
+{"* fn (file name): ##########.ext"}
+{"ㅤ"} 
+{"TAG INFO | FORMAT"}
+{"ㅤ"}
+{"* Song Name:"}
+{"* Artist:"}
+{"* Album:"}
+{"* Track Number:"}
+{"* Genre:"}
+{"* Release Year:"}
+{"_______________"}
+
+$ if {input}
+ㅤ$ return {list}
+[]
+{"Are you sure you want to write ID3 tags to 'file_name.ext'?"}
+{"ㅤ"}
+{"* Yes"}
+{"* No"}
+
+$ if {input = [y][yes]}
+ㅤ$ run {touch file_name.id3 /usr/tmp/id3/} 
+
+$ if {input = [y][yes]}
+ㅤ$ strand.& {#run[write[file_name.id3[
+ㅤ@ id3_sn == example_name
+ㅤ@ id3_art == example_name
+ㅤ@ id3_alb == example_name
+ㅤ@ id3_trn == example_number
+ㅤ@ id3_gnr == example_genre
+ㅤ@ id3_rly == example_number
+]}
+
+$ if {input = [y][yes]}
+ㅤ$ run = add {lav_use}{+1}
+ㅤ$ return {list}
+[]
+{"ID3 tags have been written for 'file_name.ext'."}
+{"View tags?"}
+{"ㅤ"}
+{"* Yes"}
+{"* No"}
+{"_____"}
+
+$ if {input = [y][yes]}
+ㅤ$ run {cat file_name.id3}
+
+~~~
+
+// "lav_semihand"
+# set = pass32 [split tags]
+$ if {input = pass32}
+ㅤ$ run = determine {input}
+
+$ strand.& {if[input{list[
+{example_name}
+{example_name}
+{example_name}
+{example_number}
+{example_genre}
+{example_number}
+]}
+ㅤ$ return {list}
+[]
+{"No secondary artist tags found."}  
+
+$ strand.& {#if[input{list[
+{example_name1 ; example_name2"}
+{example_artist1 ; example_artist2"}
+{example_album1 ; example_album2"}
+{example_number-tnc1/example_number-tnf1 ; example_number-tnc2/example_number-tnf2 "}
+{example_genre"}
+{example_number1 ; example_number2}
+]}
+ㅤ$ return {"Make seperate file of 'file_name.ext' for 'example_artist2' on 'example_album2'?"}
+
+$ if {input = [y][yes]}
+ㅤ$ run {touch example_artist1 - file_name.id3}
+ㅤ$ run {touch example_artist2 - file_name.id3}
+ㅤ$ run = add {lav_use}{+2}
+ㅤ$ return {list}
+[]
+{Tag split successful."}
+{"ㅤ"}
+{"Original file: file_name.id3"}
+{"ID3 File 1  | example_artist1 - file_name.id3"}
+{"ID3 File 2  | example_artist2 - file_name.id3"}
+{"ㅤ"}
+{"File 'example_artist2 - file_name.id3' has been made for 'example_artist2'."} 
+
+~~~
+
+// "lavender_ban"
+
+# set = pass29 [torvalds features][personal features][ban features][bill gates][microsoft]
+$ if {input = pass29}
+ㅤ$ return {list}
+[]
+{"LINUX FANS ONLY // 'lavender_ban' "}
+{"ㅤ"}
+{"strand.& #if"}
+{"input == file_name.ext"}
+{".ext == or [.wma][.wmv]"}
+{"ㅤ"}
+{"return "Windows? Really? People... :|"}
+
+$ strand.& {@if[
+@ input == file_name.mp4
+@ .ext == .mp4
+]}
+ㅤ$ return {".MP4 files are not supported by IavenD3r."}
+
+~~~
+
+// "lynxc"
+
+# set = pass37 [lynxc info]
+$ if {input = pass37}
+ㅤ$ run = check {lav_use}
+ㅤ$ return {list}
+[]
+{"Application Name: IavenD3r (Lavender Tag Editor)"}
+{"ID3 Version: ID3v1 / ID3v2"}
+{"Tag Uses: lav_use"}
+{"ㅤ"}
+{"Language (T): English"}
+{"Language (P): GX86"}
+{"Developer: GrayScale Technologies"}
+{"Publisher: GrayScale Technologies"}
+{"ㅤ"}
+{"Release Date (Lynxc): March 2024"}
+{"Release Date (Git): March 2024"}
+{"ㅤ"}
+{"*GrayScale Technologies Ltd. 2024.*"}
+
+# set = pass38 [app source]
+$ if {input = pass38}
+ㅤ$ return {list}
+[]
+{"IavenD3r by GrayScale Technologies"}
+{"ㅤ"}
+{"App Download:"} 
+{"* Lavender.gx   | https://www.github.com/GrayScaleXC/GX86"}
+{"*  IavenD3r     | ID3 Tag Editor (86MR24)"}
+{"ㅤ"}
+{"GrayScale Technologies:"}
+{"* GrayScale2000 | https://www.youtube.com/@grayscale2000"}
+
+~~~
+
+// "lavender_example"
+
+# set = pass25 [list examples][list example files][ls examples][show examples][give some examples][ls /usr/tmp/id3/example/] 
+$ if {input = pass25}
+ㅤ$ return {list}
+[]
+{"Example Files:"}
+{"ㅤ"}
+{"Example 1 | Billie Jean.txt"}
+{"Example 2 | Smells Like Teen Spirit.txt"}
+{"Example 3 | Bohemian Rhapsody.txt"}
+{"Example 4 | Sweet Child O' Mine.txt"}
+{"Example 5 | Money.txt"}
+
+$ if {input = or [example 1][billie jean]}
+ㅤ$ return {list}
+[]
+{"File Name: Billie Jean.mp3"}
+{"ㅤ"}
+{"Song:         | Billie Jean"}
+{"Artist:       | Michael Jackson"}
+{"Album:        | Thriller"}
+{"Track Number: | 6/9"}
+{"Genre:        | Rhythm, Blues, Dance-pop, Disco, Classic Rock"}
+{"Release Year: | 1982"}
+{"ㅤ"}
+{"*ID3 Tags powered by IavenD3r.*"}
+
+$ if {input = or [example 2][smells like teen spirit]}
+ㅤ$ return {list}
+[]
+{"File Name: Smells Like Teen Spirit.mp3"}
+{"ㅤ"}
+{"Song:         | Smells Like Teen Spirit"}
+{"Artist:       | Nirvana"}
+{"Album:        | Nevermind"}
+{"Track Number: | 1/12"}
+{"Genre:        | Grunge, Alternative Rock, Hard Rock"}
+{"Release Year: | 1991"}
+{"ㅤ"}
+{"*ID3 Tags powered by IavenD3r.*"}
+
+$ if {input = or [example 3][bohemian rhapsody]}
+ㅤ$ return {list}
+[]
+{"File Name: Bohemian Rhapsody.mp3"}
+{"ㅤ"}
+{"Song:         | Bohemian Rhapsody"}
+{"Artist:       | Queen"}
+{"Album:        | A Night at the Opera"}
+{"Track Number: | 11/12"}
+{"Genre:        | Hard/Progressive/Art Rock, Alternative/Indie, Progressive Pop, Pop, Rock"}
+{"Release Year: | 1975"}
+{"ㅤ"}
+{"*ID3 Tags powered by IavenD3r.*"}
+
+$ if {input = or [example 4][sweet child o mine]}
+ㅤ$ return {list}
+[]
+{"File Name: Sweet Child O' Mine.mp3"}
+{"ㅤ"}
+{"Song:         | Sweet Child O' Mine"}
+{"Artist:       | Guns N' Roses "}
+{"Album:        | Appetite for Destruction"}
+{"Track Number: | 9/12"}
+{"Genre:        | Hard Rock, Glam Metal, Rock"}
+{"Release Year: | 1987"}
+{"ㅤ"}
+{"*ID3 Tags powered by IavenD3r.*"}
+
+$ if {input = or [example 5][money]}
+ㅤ$ return {list}
+[]
+{"File Name: Money.mp3"}
+{"ㅤ"}
+{"Song:         | Money"}
+{"Artist:       | Pink Floyd"}
+{"Album:        | The Dark Side of the Moon"}
+{"Track Number: | 5/9"}
+{"Genre:        | Rock"}
+{"Release Year: | 1973"}
+{"ㅤ"}
+{"*ID3 Tags powered by IavenD3r.*"}
+
+~~~
+
+// "exit"
+
+# set = pass55 [exit]
+$ if {input = pass55}
+ㅤ$ run = determine {lav_pgms}
+
+// "exit" // "lav_exms"
+
+$ if {value [lav_pgms] = 0}
+ㅤ$ return {"Come back anytime you need."}
+
+$ if {value [lav_pgms] = 1}
+ㅤ$ return {"Thank you for using IavenD3r."} 
